@@ -18,6 +18,7 @@ public class Jogo extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		fundo = new Texture("fundo.png");
+		passaro = new Texture("passaro1.png");
 
 		larguraDispositivo = Gdx.graphics.getWidth();
 		alturaDispositivo = Gdx.graphics.getHeight();
