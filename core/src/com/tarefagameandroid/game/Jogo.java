@@ -14,9 +14,13 @@ public class Jogo extends ApplicationAdapter {
 	private float larguraDispositivo;
 	private float alturaDispositivo;
 
+	private int movimentaY = 0;
+	private int movimentaX = 0;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		//Pegando as texturas dos objetos//
 		fundo = new Texture("fundo.png");
 		passaro = new Texture("passaro1.png");
 
@@ -28,7 +32,14 @@ public class Jogo extends ApplicationAdapter {
 	@Override
 	public void render () {
 		batch.begin();
+		//Instanciando eles no aplicativo//
 		batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
+		batch.draw(passaro, movimentaX, movimentaX);
+
+		//Mov provisório
+		movimentaX++;
+		movimentaY++;
+
 		batch.end();
 	}
 	
