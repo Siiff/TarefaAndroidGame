@@ -9,6 +9,7 @@ public class Jogo extends ApplicationAdapter {
 	//Instancias das texturas//
 	SpriteBatch batch;
 	Texture fundo;
+	Texture[] canos;
 	Texture[] passaros;
 	//Floats do Dispositivo//
 	private float larguraDispositivo;
@@ -23,6 +24,10 @@ public class Jogo extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		pegandoSprites();	//Pegando Sprites, setando larguras e alturas e etc//
+	}
+	//Pegando Sprites, setando larguras e alturas e etc//
+	private void pegandoSprites() {
 		//Sprites//
 		batch = new SpriteBatch();
 		//Sprites Passaros//
@@ -30,6 +35,11 @@ public class Jogo extends ApplicationAdapter {
 		passaros[0] = new Texture("passaro1.png");
 		passaros[1] = new Texture("passaro2.png");
 		passaros[2] = new Texture("passaro3.png");
+		/*//Canos//
+		canos[0] = new Texture("cano_baixo");
+		canos[1] = new Texture("cano_baixo_maior");
+		canos[2] = new Texture("cano_topo");
+		canos[3] = new Texture("cano_topo_maior");*/
 		//Fundo//
 		fundo = new Texture("fundo.png");
 		//Pegando a largura e altura do dispositivo//
@@ -37,13 +47,37 @@ public class Jogo extends ApplicationAdapter {
 		alturaDispositivo = Gdx.graphics.getHeight();
 		//Setando posição inicial do passaro//
 		posicaoInicialVerticalPassaro = alturaDispositivo /2;
-
 	}
 
 	@Override
 	public void render () {
 		batch.begin();
 		//Movimentação do passaro//
+		tocaPula();
+		//Desenhando os sprites//
+		drawObjects();
+		//Movimentação Passaro//
+		movPassaro();
+
+		batch.end();
+	}
+
+	//Mov passaro//
+	private void movPassaro() {
+		//setando velocidade da batida da asa usando o DeltaTime * 10//
+		variacao += Gdx.graphics.getDeltaTime() * 10;
+		//Movimentação//
+		gravidade++;
+		movimentaX++;
+		movimentaY++;
+	}
+	//Desenhando os Sprites//
+	private void drawObjects() {
+		batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
+		batch.draw(passaros[(int)variacao],30,posicaoInicialVerticalPassaro, 150, 150);
+	}
+	//Movimentação do Passaro//
+	private void tocaPula() {
 		if(variacao >3 ){
 			variacao = 0;
 		}
@@ -54,19 +88,8 @@ public class Jogo extends ApplicationAdapter {
 		if (posicaoInicialVerticalPassaro > 0 || toqueTela) {
 			posicaoInicialVerticalPassaro = posicaoInicialVerticalPassaro - gravidade;
 		}
-		//Desenhando os sprites//
-		batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
-		batch.draw(passaros[(int)variacao],30,posicaoInicialVerticalPassaro, 150, 150);
-		//setando velocidade da batida da asa usando o DeltaTime * 10//
-		variacao += Gdx.graphics.getDeltaTime() * 10;
-		//Movimentação//
-		gravidade++;
-		movimentaX++;
-		movimentaY++;
-
-		batch.end();
 	}
-	
+
 	@Override
 	public void dispose () {
 		batch.dispose();
