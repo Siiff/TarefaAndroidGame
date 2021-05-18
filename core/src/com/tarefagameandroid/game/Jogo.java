@@ -149,13 +149,28 @@ public class Jogo extends ApplicationAdapter {
 	}
 
 	private void verificaEstadoJogo() {
-		boolean toqueTela = Gdx.input.justTouched(); //Pegando toques na tela//
-		if(Gdx.input.justTouched()){ //Se tocar na tela, seta gravidade para -25 para subir o passaro//
+
+		//Movimentação do passaro//
+		if(variacao >3 ){
+			variacao = 0;
+		}
+
+		//Pegando toques na tela//
+		boolean toqueTela = Gdx.input.justTouched();
+
+		//Se tocar na tela, seta gravidade para -25 para subir o passaro//
+		if(Gdx.input.justTouched()){
 			gravidade = -25;
 		}
 		if (posicaoInicialVerticalPassaro > 0 || toqueTela) {
 			posicaoInicialVerticalPassaro = posicaoInicialVerticalPassaro - gravidade;
 		}
+		//setando velocidade da batida da asa usando o DeltaTime * 10//
+		variacao += Gdx.graphics.getDeltaTime() * 10;
+
+		//Movimentação//
+		gravidade++;
+
 		//Movimentação do Cano//
 		posicaoCanoHorizontal -= Gdx.graphics.getDeltaTime()*200;
 		if(posicaoCanoHorizontal <- canoBaixo.getHeight()){
@@ -163,14 +178,8 @@ public class Jogo extends ApplicationAdapter {
 			posicaoCanoVertical = random.nextInt(400) -200;
 			passouCano = false;
 		}
-		//Movimentação do passaro//
-		if(variacao >3 ){
-			variacao = 0;
-		}
-		//setando velocidade da batida da asa usando o DeltaTime * 10//
-		variacao += Gdx.graphics.getDeltaTime() * 10;
-		//Movimentação//
-		gravidade++;
+
+
 	}
 
 	@Override
