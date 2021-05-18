@@ -18,7 +18,7 @@ public class Jogo extends ApplicationAdapter {
 	Texture[] passaros;
 	Texture fundo;
 	Texture canoBaixo;
-	Texture canoAlto;
+	Texture canoTopo;
 	SpriteBatch batch;
 
 	//Floats do Dispositivo//
@@ -100,7 +100,7 @@ public class Jogo extends ApplicationAdapter {
 
 		//Canos//
 		canoBaixo = new Texture("cano_baixo_maior.png");
-		canoBaixo = new Texture("cano_topo_maior.png");
+		canoTopo = new Texture("cano_topo_maior.png");
 	}
 
 	@Override
@@ -127,8 +127,8 @@ public class Jogo extends ApplicationAdapter {
 		//Setando colisor dos canos//
 		retanguloCanoBaixo.set(posicaoCanoHorizontal, alturaDispositivo / 2 - canoBaixo.getHeight() - espacoEntreCanos / 2 + posicaoCanoVertical,
 				canoBaixo.getWidth(), canoBaixo.getHeight());
-		retanguloCanoCima.set(posicaoCanoHorizontal, alturaDispositivo / 2 - canoAlto.getHeight() - espacoEntreCanos / 2 + posicaoCanoVertical,
-				canoAlto.getWidth(), canoAlto.getHeight());
+		retanguloCanoCima.set(posicaoCanoHorizontal, alturaDispositivo / 2 - canoTopo.getHeight() - espacoEntreCanos / 2 + posicaoCanoVertical,
+				canoTopo.getWidth(), canoTopo.getHeight());
 		//Booleans da colisão//
 		boolean bateuCanoCima = Intersector.overlaps(circuloPassaro, retanguloCanoCima);
 		boolean bateuCanoBaixo = Intersector.overlaps(circuloPassaro, retanguloCanoBaixo);
@@ -143,7 +143,7 @@ public class Jogo extends ApplicationAdapter {
 		batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
 		batch.draw(passaros[(int)variacao],30,posicaoInicialVerticalPassaro);
 		batch.draw(canoBaixo, posicaoCanoHorizontal, alturaDispositivo/2 - canoBaixo.getHeight() - espacoEntreCanos/2 + posicaoCanoVertical );
-		batch.draw(canoAlto, posicaoCanoHorizontal, alturaDispositivo/2 + espacoEntreCanos / 2 + posicaoCanoVertical );
+		batch.draw(canoTopo, posicaoCanoHorizontal, alturaDispositivo/2 + espacoEntreCanos / 2 + posicaoCanoVertical );
 		textoPontuacao.draw(batch, String.valueOf(pontos), larguraDispositivo/2, alturaDispositivo - 100 );
 		batch.end();
 	}
