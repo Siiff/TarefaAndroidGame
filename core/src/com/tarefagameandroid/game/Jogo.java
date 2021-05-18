@@ -15,32 +15,40 @@ import java.util.Random;
 
 public class Jogo extends ApplicationAdapter {
 	//Instancias das texturas//
-	SpriteBatch batch;
-	Texture fundo;
 	Texture[] passaros;
+	Texture fundo;
 	Texture canoBaixo;
 	Texture canoAlto;
+	SpriteBatch batch;
+
 	//Floats do Dispositivo//
 	private float larguraDispositivo;
 	private float alturaDispositivo;
+
 	//Floats Gravidade//
 	private float variacao= 0;
 	private int gravidade = 0;
 	private float posicaoInicialVerticalPassaro= 0;
+
 	//Canos//
 	private float posicaoCanoHorizontal;
 	private float posicaoCanoVertical;
 	private float espacoEntreCanos;
 	private Random random;
+
 	//Passou pelo Cano//
 	private boolean passouCano = false;
+
 	//Pontuação//
 	private int pontos = 0;
+
 	//Imprimindo coisas na tela//
 	BitmapFont textoPontuacao;
-	private ShapeRenderer shapeRenderer;
+	ShapeRenderer shapeRenderer;
+
 	//colisão do passaro//
 	private Circle circuloPassaro;
+
 	//Colisão do cano//
 	private Rectangle retanguloCanoCima;
 	private Rectangle retanguloCanoBaixo;
@@ -49,32 +57,35 @@ public class Jogo extends ApplicationAdapter {
 	public void create () {
 		inicializaTexturas();
 		inicializaObjetos();
-
 	}
 
 	private void inicializaObjetos() {
+		//Inicializando Random e Batch//
 		random = new Random();
 		batch = new SpriteBatch();
 
 		//Pegando a largura e altura do dispositivo//
 		larguraDispositivo = Gdx.graphics.getWidth();
 		alturaDispositivo = Gdx.graphics.getHeight();
+
 		//Setando posição inicial do passaro//
 		posicaoInicialVerticalPassaro = alturaDispositivo /2;
+
 		//Canos//
 		posicaoCanoHorizontal = larguraDispositivo;
 		espacoEntreCanos = 350;
+
 		//Pontuação//
 		textoPontuacao = new BitmapFont();
 		textoPontuacao.setColor(Color.WHITE);
 		textoPontuacao.getData().setScale(10);
+
 		//Colisores//
 		shapeRenderer = new ShapeRenderer();
 		circuloPassaro = new Circle();
 		retanguloCanoBaixo = new Rectangle();
 		retanguloCanoCima = new Rectangle();
 	}
-
 	private void inicializaTexturas() {
 		//Sprites//
 		batch = new SpriteBatch();
@@ -83,22 +94,21 @@ public class Jogo extends ApplicationAdapter {
 		passaros[0] = new Texture("passaro1.png");
 		passaros[1] = new Texture("passaro2.png");
 		passaros[2] = new Texture("passaro3.png");
+
 		//Fundo//
 		fundo = new Texture("fundo.png");
-		//Canos//
-		canoBaixo = new Texture("cano_baixo_maior");
-		canoBaixo = new Texture("cano_topo_maior");
-	}
 
+		//Canos//
+		canoBaixo = new Texture("cano_baixo_maior.png");
+		canoBaixo = new Texture("cano_topo_maior.png");
+	}
 
 	@Override
 	public void render () {
-
 		verificaEstadoJogo();
 		desenharTexturas();
 		detectarColisao();
 		validaPontos();
-
 	}
 
 	private void validaPontos() {
@@ -131,9 +141,9 @@ public class Jogo extends ApplicationAdapter {
 	private void desenharTexturas() {
 		batch.begin();
 		batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
-		batch.draw(passaros[(int)variacao],50,posicaoInicialVerticalPassaro, 150, 150);
+		batch.draw(passaros[(int)variacao],30,posicaoInicialVerticalPassaro);
 		batch.draw(canoBaixo, posicaoCanoHorizontal, alturaDispositivo/2 - canoBaixo.getHeight() - espacoEntreCanos/2 + posicaoCanoVertical );
-		batch.draw(canoAlto, posicaoCanoHorizontal, alturaDispositivo/2 + espacoEntreCanos /2 +posicaoCanoVertical);
+		batch.draw(canoAlto, posicaoCanoHorizontal, alturaDispositivo/2 + espacoEntreCanos / 2 + posicaoCanoVertical );
 		textoPontuacao.draw(batch, String.valueOf(pontos), larguraDispositivo/2, alturaDispositivo - 100 );
 		batch.end();
 	}
