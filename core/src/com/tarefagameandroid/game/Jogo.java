@@ -150,6 +150,9 @@ public class Jogo extends ApplicationAdapter {
 
 	private void verificaEstadoJogo() {
 
+		//setando velocidade da batida da asa usando o DeltaTime * 10//
+		variacao += Gdx.graphics.getDeltaTime() * 10;
+
 		//Movimentação do passaro//
 		if(variacao >3 ){
 			variacao = 0;
@@ -165,8 +168,6 @@ public class Jogo extends ApplicationAdapter {
 		if (posicaoInicialVerticalPassaro > 0 || toqueTela) {
 			posicaoInicialVerticalPassaro = posicaoInicialVerticalPassaro - gravidade;
 		}
-		//setando velocidade da batida da asa usando o DeltaTime * 10//
-		variacao += Gdx.graphics.getDeltaTime() * 10;
 
 		//Movimentação//
 		gravidade++;
