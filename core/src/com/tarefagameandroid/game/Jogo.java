@@ -60,7 +60,7 @@ public class Jogo extends ApplicationAdapter {
 
 	BitmapFont textoPontuacao;
 	BitmapFont textoReiniciar;
-	BitmapFont textoMelhorPontuacao
+	BitmapFont textoMelhorPontuacao;
 
 
 	@Override
@@ -88,12 +88,12 @@ public class Jogo extends ApplicationAdapter {
 		//Pontuação//
 		textoPontuacao = new BitmapFont();
 		textoPontuacao.setColor(Color.WHITE);
-		textoPontuacao.getData().setScale(10);
+		textoPontuacao.getData().setScale(8);
 
-		//Pontuação//
+		//Melhor Pontuação//
 		textoMelhorPontuacao = new BitmapFont();
 		textoMelhorPontuacao.setColor(Color.GREEN);
-		textoMelhorPontuacao.getData().setScale(10);
+		textoMelhorPontuacao.getData().setScale(3);
 
 		//Reiniciar//
 		textoReiniciar = new BitmapFont();
@@ -177,7 +177,17 @@ public class Jogo extends ApplicationAdapter {
 		batch.draw(passaros[(int)variacao],30,posicaoInicialVerticalPassaro);
 		batch.draw(canoBaixo, posicaoCanoHorizontal, alturaDispositivo/2 - canoBaixo.getHeight() - espacoEntreCanos/2 + posicaoCanoVertical );
 		batch.draw(canoTopo, posicaoCanoHorizontal, alturaDispositivo/2 + espacoEntreCanos / 2 + posicaoCanoVertical );
-		textoPontuacao.draw(batch, String.valueOf(pontos), larguraDispositivo/2, alturaDispositivo - 100 );
+
+		//Pontuacao//
+		textoPontuacao.draw(batch, String.valueOf(pontos), larguraDispositivo/2 - 100, alturaDispositivo - 100 );
+		if(estadoJogo == 0){
+			//Gameover//
+			batch.draw(textoGameOver, larguraDispositivo/2 - textoGameOver.getWidth()/2, alturaDispositivo/2 );
+			//Melhor pontuacao e reiniciar//
+			textoReiniciar.draw(batch, "TOQUE NA TELA PARA REINICIAR!",larguraDispositivo/2 - 350, alturaDispositivo/2 - textoGameOver.getHeight()/2 - 100);
+			textoMelhorPontuacao.draw(batch, "SUA MELHOR PONTUACAO É: 0 PONTOS" ,larguraDispositivo/2 - 440, alturaDispositivo/2 + textoGameOver.getHeight() +150);
+		}
+
 		batch.end();
 	}
 
