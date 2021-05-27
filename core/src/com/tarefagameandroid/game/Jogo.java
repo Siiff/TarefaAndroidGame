@@ -2,6 +2,8 @@ package com.tarefagameandroid.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -30,6 +32,7 @@ public class Jogo extends ApplicationAdapter {
 	private float variacao= 0;
 	private int gravidade = 0;
 	private float posicaoInicialVerticalPassaro= 0;
+	private float posicaoInicialHorizontalPassaro = 0;
 
 	//Canos//
 	private float posicaoCanoHorizontal;
@@ -42,6 +45,7 @@ public class Jogo extends ApplicationAdapter {
 
 	//Pontuação//
 	private int pontos = 0;
+	private int pontuacaoMaxima = 0;
 
 	//Imprimindo coisas na tela//
 	ShapeRenderer shapeRenderer;
@@ -61,6 +65,14 @@ public class Jogo extends ApplicationAdapter {
 	BitmapFont textoPontuacao;
 	BitmapFont textoReiniciar;
 	BitmapFont textoMelhorPontuacao;
+
+	//Sons//
+	Sound somAsas;
+	Sound somBatida;
+	Sound somPontos;
+
+	//Preferencias//
+	Preferences preferencias;
 
 
 	@Override
@@ -100,12 +112,21 @@ public class Jogo extends ApplicationAdapter {
 		textoReiniciar.setColor(Color.RED);
 		textoReiniciar.getData().setScale(3);
 
-
 		//Colisores//
 		shapeRenderer = new ShapeRenderer();
 		circuloPassaro = new Circle();
 		retanguloCanoBaixo = new Rectangle();
 		retanguloCanoCima = new Rectangle();
+
+		//Sons//
+		somAsas = Gdx.audio.newSound(Gdx.files.internal("som_asa.wav"));
+		somBatida = Gdx.audio.newSound(Gdx.files.internal("som_batida.wav"));
+		somPontos = Gdx.audio.newSound(Gdx.files.internal("som_pontos.wav"));
+
+		//Preferencias//
+		preferencias = Gdx.app.getPreferences("flappybird");
+		pontuacaoMaxima = preferencias.getInteger("pontuacaoMaxima", 0);
+
 	}
 	private void inicializaTexturas() {
 		//Sprites//
@@ -141,6 +162,8 @@ public class Jogo extends ApplicationAdapter {
 		{//Passou cano, pontua//
 			if(!passouCano){
 				pontos++;
+				//Som pontos//
+				somPontos.play();
 				passouCano = true;
 			}
 		}
@@ -167,25 +190,29 @@ public class Jogo extends ApplicationAdapter {
 
 		if(bateuCanoBaixo || bateuCanoCima){
 			Gdx.app.log("log", "bateu");
-			estadoJogo = 2;
+			if(estadoJogo == 1){
+				//Som batida//
+				somBatida.play();
+				estadoJogo = 2;
+			}
 		}
 	}
 
 	private void desenharTexturas() {
 		batch.begin();
 		batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
-		batch.draw(passaros[(int)variacao],30,posicaoInicialVerticalPassaro);
+		batch.draw(passaros[(int)variacao],50+ posicaoInicialHorizontalPassaro,posicaoInicialVerticalPassaro);
 		batch.draw(canoBaixo, posicaoCanoHorizontal, alturaDispositivo/2 - canoBaixo.getHeight() - espacoEntreCanos/2 + posicaoCanoVertical );
 		batch.draw(canoTopo, posicaoCanoHorizontal, alturaDispositivo/2 + espacoEntreCanos / 2 + posicaoCanoVertical );
 
 		//Pontuacao//
 		textoPontuacao.draw(batch, String.valueOf(pontos), larguraDispositivo/2 - 100, alturaDispositivo - 100 );
-		if(estadoJogo == 0){
+		if(estadoJogo == 2){
 			//Gameover//
 			batch.draw(textoGameOver, larguraDispositivo/2 - textoGameOver.getWidth()/2, alturaDispositivo/2 );
 			//Melhor pontuacao e reiniciar//
 			textoReiniciar.draw(batch, "TOQUE NA TELA PARA REINICIAR!",larguraDispositivo/2 - 350, alturaDispositivo/2 - textoGameOver.getHeight()/2 - 100);
-			textoMelhorPontuacao.draw(batch, "SUA MELHOR PONTUACAO É: 0 PONTOS" ,larguraDispositivo/2 - 440, alturaDispositivo/2 + textoGameOver.getHeight() +150);
+			textoMelhorPontuacao.draw(batch, "SUA MELHOR PONTUACAO É: "+pontuacaoMaxima+" PONTOS!" ,larguraDispositivo/2 - 440, alturaDispositivo/2 + textoGameOver.getHeight() +150);
 		}
 
 		batch.end();
@@ -201,12 +228,14 @@ public class Jogo extends ApplicationAdapter {
 			if(toqueTela){
 				gravidade = -15;
 				estadoJogo = 1;
+				somAsas.play();
 			}
 		}
 
 		else if(estadoJogo == 1){
 			if(toqueTela) {
 				gravidade = -15;
+				somAsas.play();
 			}
 			//Movimentação do Cano//
 			posicaoCanoHorizontal -= Gdx.graphics.getDeltaTime()*200;
@@ -222,13 +251,23 @@ public class Jogo extends ApplicationAdapter {
 			gravidade++;
 		}
 		else if(estadoJogo == 2){
+			//Resetar o jogo//
+			if(pontos > pontuacaoMaxima) {
+				pontuacaoMaxima = pontos;
+				preferencias.putInteger("pontuacaoMaxima", pontuacaoMaxima);
+			}
+			posicaoInicialHorizontalPassaro -= Gdx.graphics.getDeltaTime() * 500;
 
+			//Reiniciar//
+			if(toqueTela){
+				estadoJogo = 0;
+				pontos= 0;
+				gravidade = 0;
+				posicaoInicialHorizontalPassaro = 0;
+				posicaoInicialVerticalPassaro = alturaDispositivo/2;
+				posicaoCanoHorizontal = larguraDispositivo;
+			}
 		}
-
-
-
-
-
 	}
 
 	@Override
